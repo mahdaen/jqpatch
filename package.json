@@ -1,0 +1,38 @@
+{
+    "name": "jqpatch",
+    "version": "1.0.0",
+    "description": "A collections of jQuery plugins patches.",
+    "keywords": [
+        "jqpatch",
+        "jquery",
+        "jquery plugin"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/mahdaen/jqpatch"
+    },
+    "devDependencies": {
+        "grunt": "*",
+        "grunt-contrib-concat": "*",
+        "grunt-contrib-uglify": "*",
+        "grunt-contrib-watch": "*",
+        "grunt-apidoc": "*",
+        "jquery": "*",
+        "native-js": "*"
+    },
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/mahdaen/jqpatch/issues"
+    },
+    "homepage": "https://github.com/mahdaen/jqpatch",
+    "main": "Gruntfile.js",
+    "directories": {
+        "doc": "docs",
+        "test": "test"
+    },
+    "dependencies": {},
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Nanang Mahdaen El Agung <mahdaen@gmail.com>"
+}

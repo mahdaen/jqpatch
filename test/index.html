@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="../node_modules/jquery/dist/jquery.js" type="text/javascript"></script>
+    <script src="../dist/jqpatch.js" type="text/javascript"></script>
+    <script src="http://localhost:2084/livereload.js" type="text/javascript"></script>
+    <style>
+        span, .source {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <section class="target">
+        <span class="inner">Test</span>
+    </section>
+    <section class="source">
+        <span class="e c b" age="14" adult="false" data-foo="1" data-bar="[2,3,4]">E</span>
+        <span class="a" age="10" adult="false">A</span>
+        <span class="d" age="1" adult="true">D</span>
+        <span class="b" age="34" adult="false">B</span>
+        <span class="f" adult="true">F</span>
+        <span class="c" age="4" adult="true">C</span>
+    </section>
+    <section class="form">
+        <input type="text" id="name" value="John" />
+    </section>
+</body>
+</html>
