@@ -20,20 +20,20 @@ module.exports = function(grunt) {
                     'dist/jqpatch.js': [
                         /* Externals */
                         'node_modules/native-js/dist/nativejs.clean.js',
-                        'source/ext.polyfill.js',
+                        'source/extensions/ext.polyfill.js',
 
                         /* Cores Patches */
-                        'source/ptc.core.js',
+                        'source/patches/ptc.core.js',
 
                         /* Core Plugins */
-                        'source/plg.core.js',
-                        'source/plg.checker.js',
-                        'source/plg.style.js',
+                        'source/plugins/plg.core.js',
+                        'source/plugins/plg.checker.js',
+                        'source/plugins/plg.style.js',
 
                         /* Extensions */
-                        'source/ext.switch.js',
-                        'source/ext.animation.js',
-                        'source/ext.notification.js',
+                        'source/extensions/ext.switch.js',
+                        'source/extensions/ext.animation.js',
+                        'source/extensions/ext.notification.js',
                     ]
                 }
             },

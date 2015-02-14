@@ -801,9 +801,7 @@ function() {
             });
         }
     };
-
-
-
+    
 })(window.jQuery || false);
 
 (function($) {
