@@ -244,29 +244,4 @@
 
         return this;
     }
-
-    /* Remove Class Shorted */
-    $plg.remClass = $plg.removeClass;
-
-    /* Patch CSS Plugin */
-    $plg.css = function(prop, value) {
-        if (prop) {
-            return this._css(prop, value);
-        }
-
-        else {
-            var style = this.first().prop('style'), props = {};
-
-            for (var property in style) {
-                if (isNaN(Number(property)) && property !== 'length' && style[property] !== '' && !isFunction(style[property]) && style[property] !== null) {
-                    props[property] = style[property];
-                }
-            }
-
-            return props;
-        }
-
-        return this;
-    }
-
 })(window.jQuery || false);

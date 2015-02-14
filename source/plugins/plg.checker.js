@@ -5,7 +5,7 @@
     if (!$) return;
 
     /* Plugins holder */
-    var $plg = $.fn, $dom = $; $.module = $.fn;
+    var $plg = $.fn;
 
     /* Has Attribute Checker */
     $plg.hasAttr = function(name) {

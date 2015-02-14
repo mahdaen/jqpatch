@@ -27,7 +27,7 @@
         divisor = getDivisor(+width, +height);
 
         return 'undefined' === typeof temp ? (width / divisor) + ':' + (height / divisor) : (height / divisor) + ':' + (width / divisor);
-    };
+    }
 
     /* Box Ratio Getter and Setter */
     $plg.ratio = function(value, reverse) {
@@ -66,15 +66,76 @@
         /* If no value given, try to get the ratio value */
         else {
             /* Return if already exist */
-            if (this.get().ratio) {
-                return this.get().ratio;
+            if (this.get(0).ratio) {
+                return this.get(0).ratio;
             }
 
             /* Count if not exist */
             else {
-                return this.get().ratio = countRatio(this.width(), this.height());
+                return this.get(0).ratio = countRatio(this.width(), this.height());
             }
         }
-    };
+    }
+
+    /* Creating offset getter module */
+    $plg.offset = function() {
+        if (this.length <= 0) return this;
+
+        return {
+            /* Dimensions */
+            width: this.width(),
+            height: this.height(),
+
+            /* Positions */
+            left: this.get(0).offsetLeft,
+            top: this.get(0).offsetTop,
+
+            /* Scrolls */
+            scrollTop: this.get(0).scrollTop,
+            scrollLeft: this.get(0).scrollLeft,
+
+            /* Box ratio */
+            ratio: this.first().ratio()
+        };
+    }
+
+    /* Creating Box Orientation Module */
+    $plg.orientation = function() {
+        if (this.length <= 0) return this;
+
+        this.each(function() {
+            var offset = $(this).offset();
+
+            if (offset.width > offset.height) {
+                $(this).attr('landscape', '');
+
+                this.orientation = 'landscape';
+            } else {
+                $(this).attr('portrait', '');
+
+                this.orientation = 'portrait';
+            }
+        });
+
+        return this.first().prop('orientation');
+    }
+
+    /* Computed Style Getter */
+    $plg.cstyle = function(name) {
+        if (this.length > 0 && isString(name)) {
+            return getComputedStyle(this.get(0))[name] ? getComputedStyle(this.get(0))[name] : null;
+        }
+        else if (this.length > 0 && isArray(name)) {
+            var props = {}, $this = this;
+
+            foreach(name, function (name) {
+                if (getComputedStyle($this.get(0))[name]) props[name] = getComputedStyle($this.get(0))[name];
+            });
+
+            return props;
+        }
+
+        return null;
+    }
 
 })(window.jQuery || false);

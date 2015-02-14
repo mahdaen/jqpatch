@@ -1,3 +1,12 @@
+/**
+ * jQPatch.
+ * jQuery Patches and Plugins collections.
+ * Language: Javascript.
+ * Created by mahdaen <mahdaen@gmail.com> on 12/16/14.
+ * Requires: jQuery
+ * License: GNU General Public License v2 or later.
+ */
+
 if (!window) var window = {};
 
 !function(native) {
@@ -488,21 +497,156 @@ function() {
 
         return this;
     }
+})(window.jQuery || false);
+
+(function($) {
+    'use strict';
+
+    /* Escape if no jQuery loaded */
+    if (!$) return;
+
+    /* Plugins holder */
+    var $plg = $.fn, $dom = $; $.module = $.fn;
 
     /* Remove Class Shorted */
+    $plg._remclass = $plg.removeClass;
+    $plg.removeClass = function(name) {
+        var $this = this;
+
+        if (isString(name)) {
+            if (name.match(/\s+/)) {
+                name = name.split(/\s+/);
+
+                foreach(name, function(attr) {
+                    $this._remclass(attr);
+                });
+            }
+
+            else {
+                $this._remclass(name);
+            }
+        }
+
+        else if (isArray(name)) {
+            foreach(name, function (attr) {
+                $this._remclass(attr);
+            });
+        }
+
+        return this;
+    }
     $plg.remClass = $plg.removeClass;
+
+    /* Browser CSS Property List */
+    var propList = {
+        default: [], // Default css in lowercase.
+        publics: [], // Default css in normal.
+
+        customs: [], // Browser specific in lowercase and without prefix.
+        origins: [], // Browser specific in normal.
+        browser: '', // Broser type.
+    };
+
+    /* Creating new element to get style */
+    var style = document.createElement('span').style;
+    var lists = [];
+
+    /* Collecting css properties */
+    for (var key in style) {
+        lists.push(key);
+    }
+
+    /* Checking browser */
+    if (lists.indexOf('webkitUserSelect') > -1) {
+        propList.browser = 'webkit';
+    }
+    else if (lists.indexOf('MozUserSelect') > -1) {
+        propList.browser = 'Moz';
+    }
+    else if (lists.indexOf('msUserSelect') > -1) {
+        propList.browser = 'ms';
+    }
+
+    /* Splitting default properties and vendor specific properties */
+    foreach(lists, function (prop) {
+        /* If property contains current browser pattern, add to custom list */
+        if (prop.search(propList.browser) > -1) {
+            propList.origins.push(prop);
+            propList.customs.push(prop.replace(propList.browser, '').toLowerCase());
+        }
+        /* Else add to default list */
+        else {
+            propList.default.push(prop.toLowerCase());
+            propList.publics.push(prop);
+        }
+    });
 
     /* Patch CSS Plugin */
     $plg.css = function(prop, value) {
-        if (prop) {
-            return this._css(prop, value);
+        var $this = this;
+
+        if (isString(prop)) {
+            // Removing dashes.
+            if (prop.search('-')) {
+                prop = prop.replace(/\-/g, '');
+            }
+
+            // Converting to lowercase to search index.
+            prop = prop.toLowerCase();
+
+            // Searching in custom lists.
+            var propIndex = propList.customs.indexOf(prop);
+
+            // If custom prop, get the original property from the list.
+            if (propIndex > -1) {
+                prop = propList.origins[propIndex];
+            }
+
+            // If not custom prop, then try looking on default list.
+            else {
+                propIndex = propList.default.indexOf(prop);
+
+                /* If default prop, then get the original property from default lists */
+                if (propIndex > -1) {
+                    prop = propList.publics[propIndex];
+                }
+
+                /* Else tell the user that defined property is not valid css property */
+                else {
+                    throw prop + ' is not valid CSS Property!'
+                }
+            }
+
+            if (value) {
+                return this._css(prop, value);
+            }
+
+            else {
+                return this.length > 0 ? this.get(0).style[prop] : undefined;
+            }
+        }
+
+        else if (isObject(prop)) {
+            foreach(prop, function (key, value) {
+                $this.css(key, value);
+            });
+        }
+
+        else if (isArray(prop)) {
+            var proplist = {};
+
+            foreach(prop, function(key) {
+                proplist[key] = $this.css(key);
+            });
+
+            return proplist;
         }
 
         else {
             var style = this.first().prop('style'), props = {};
 
             for (var property in style) {
-                if (isNaN(Number(property)) && property !== 'length' && style[property] !== '' && !isFunction(style[property]) && style[property] !== null) {
+                if (isNaN(Number(property)) && property !== 'length' && property !== 'cssText' && style[property] !== '' && !isFunction(style[property]) && style[property] !== null) {
                     props[property] = style[property];
                 }
             }
@@ -801,7 +945,7 @@ function() {
             });
         }
     };
-    
+
 })(window.jQuery || false);
 
 (function($) {
@@ -811,7 +955,7 @@ function() {
     if (!$) return;
 
     /* Plugins holder */
-    var $plg = $.fn, $dom = $; $.module = $.fn;
+    var $plg = $.fn;
 
     /* Has Attribute Checker */
     $plg.hasAttr = function(name) {
@@ -902,7 +1046,7 @@ function() {
         divisor = getDivisor(+width, +height);
 
         return 'undefined' === typeof temp ? (width / divisor) + ':' + (height / divisor) : (height / divisor) + ':' + (width / divisor);
-    };
+    }
 
     /* Box Ratio Getter and Setter */
     $plg.ratio = function(value, reverse) {
@@ -941,16 +1085,77 @@ function() {
         /* If no value given, try to get the ratio value */
         else {
             /* Return if already exist */
-            if (this.get().ratio) {
-                return this.get().ratio;
+            if (this.get(0).ratio) {
+                return this.get(0).ratio;
             }
 
             /* Count if not exist */
             else {
-                return this.get().ratio = countRatio(this.width(), this.height());
+                return this.get(0).ratio = countRatio(this.width(), this.height());
             }
         }
-    };
+    }
+
+    /* Creating offset getter module */
+    $plg.offset = function() {
+        if (this.length <= 0) return this;
+
+        return {
+            /* Dimensions */
+            width: this.width(),
+            height: this.height(),
+
+            /* Positions */
+            left: this.get(0).offsetLeft,
+            top: this.get(0).offsetTop,
+
+            /* Scrolls */
+            scrollTop: this.get(0).scrollTop,
+            scrollLeft: this.get(0).scrollLeft,
+
+            /* Box ratio */
+            ratio: this.first().ratio()
+        };
+    }
+
+    /* Creating Box Orientation Module */
+    $plg.orientation = function() {
+        if (this.length <= 0) return this;
+
+        this.each(function() {
+            var offset = $(this).offset();
+
+            if (offset.width > offset.height) {
+                $(this).attr('landscape', '');
+
+                this.orientation = 'landscape';
+            } else {
+                $(this).attr('portrait', '');
+
+                this.orientation = 'portrait';
+            }
+        });
+
+        return this.first().prop('orientation');
+    }
+
+    /* Computed Style Getter */
+    $plg.cstyle = function(name) {
+        if (this.length > 0 && isString(name)) {
+            return getComputedStyle(this.get(0))[name] ? getComputedStyle(this.get(0))[name] : null;
+        }
+        else if (this.length > 0 && isArray(name)) {
+            var props = {}, $this = this;
+
+            foreach(name, function (name) {
+                if (getComputedStyle($this.get(0))[name]) props[name] = getComputedStyle($this.get(0))[name];
+            });
+
+            return props;
+        }
+
+        return null;
+    }
 
 })(window.jQuery || false);
 
@@ -1466,6 +1671,218 @@ function() {
         });
     };
 
+})(window.jQuery || false);
+
+(function($) {
+    'use strict';
+
+    /* Escape if no jQuery loaded */
+    if (!$) return;
+
+    /* Plugins holder */
+    var $plg = $.fn;
+
+    /* Event Provider */
+    var EventProvider = function() {
+        this.events = {};
+    };
+
+    /* Event Provider Core Function */
+    EventProvider.prototype = {
+        /* Search Event Provider */
+        search: function(name) {
+            if (isString(name)) {
+                return isObject(this.events[name]) ? this.events[name] : undefined;
+            }
+
+            return undefined;
+        },
+
+        /* Register Event Provider */
+        register: function(name, provider, options) {
+            if (isString(name) && isFunction(provider)) {
+                this.events[name] = {
+                    maker: provider,
+                    event: new CustomEvent(name, options)
+                };
+            }
+
+            return this.events[name].event;
+        },
+
+        /* Dispatch Event Provider */
+        dispatch: function(name, elem, props) {
+            if (isString(name) && isHTML(elem) && this.events[name]) {
+                var event = this.events[name].event;
+
+                if (isObject(props)) {
+                    foreach(props, function (key, value) {
+                        event[key] = value;
+                    });
+                }
+
+                elem.dispatchEvent(event);
+            }
+        }
+    };
+
+    /* Register EventProvider to window */
+    var eventProvider = new EventProvider;
+    window.EventProvider = eventProvider;
+
+    /* Event Listener */
+    $plg.listen = function(name, type, handler) {
+        this.each(function() {
+            var elem = this;
+
+            /* Add prefix to event type */
+            if (isString(type) && elem.hasOwnProperty('on' + type))  type = 'on' + type;
+
+            /* Using single name registration */
+            if (isString(name)) {
+                /* Using single event type registration */
+                if (isString(type) && isFunction(handler)) {
+                    /* Add event collection if not exist */
+                    if (!elem._evcol) elem._evcol = {};
+
+                    /* Add event type collection if not exist */
+                    if (!elem._evcol[type]) elem._evcol[type] = { _init: true };
+
+                    /* Add event type handler collection if not exist */
+                    if (!elem._evcol[type][name]) elem._evcol[type][name] = [];
+
+                    /* Pushing event handler to collections */
+                    elem._evcol[type][name].push(handler);
+                }
+
+                /* Using multiple event type registration */
+                else if (isObject(type)) {
+                    foreach(type, function(type, handler) {
+                        if (isFunction(handler)) {
+                            $(elem).listen(name, type, handler);
+                        }
+                    });
+                }
+            }
+
+            /* Using multiple name registration */
+            else if (isObject(name)) {
+                /* Iterate type list */
+                foreach(name, function (name, types) {
+                    if (isObject(types)) {
+                        /* Iterate names list */
+                        foreach(types, function (type, handler) {
+                            if (isFunction(handler)) {
+                                $(elem).listen(type, name, handler);
+                            }
+                        });
+                    }
+                });
+            }
+
+            /* Create DOMList Event Handler if not already defined */
+            if (elem._evcol) {
+                if (elem._evcol[type] && elem._evcol[type]._init) {
+                    elem._evcol[type]._init = false;
+
+                    /* Tell Event Provider (if available) to provide custom event to this element */
+                    var cev = eventProvider.search(type);
+                    if (cev) cev.maker.call(elem);
+
+                    /* Creating Default Handler */
+                    var defHandler = function(e) {
+                        var $self = this;
+
+                        if ($self._evcol[type]) {
+                            foreach($self._evcol[type], function (name, handlers) {
+                                if (name !== '_init') {
+                                    foreach(handlers, function (handler) {
+                                        if (isFunction(handler)) {
+                                            handler.call($self, e);
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    }
+
+                    $(elem).on(type.replace(/^on/, ''), defHandler);
+                }
+            }
+        });
+
+        return this;
+    };
+
+    /* Event Unlistener */
+    $plg.unlisten = function(name, type) {
+        var self = this;
+        if (isString(name)) {
+            if (isString(type)) {
+                this.each(function() {
+                    if (this.hasOwnProperty('on' + type)) type = 'on' + type;
+
+                    if (this._evcol[type] && this._evcol[type][name]) {
+                        delete this._evcol[type][name];
+                    }
+                });
+            } else if (isArray(type)) {
+                foreach(type, function (type) {
+                    self.unlisten(name, type);
+                });
+            } else {
+                this.each(function() {
+                    var $this = this;
+
+                    foreach($this._evcol, function (type, names) {
+                        if (isObject(names) && names.hasOwnProperty(name)) {
+                            delete $this._evcol[type][name];
+                        }
+                    });
+                });
+            }
+        } else if (isArray(name)) {
+            if (isString(type)) {
+                foreach(name, function(name) {
+                    self.unlisten(name, type);
+                });
+            } else if (isArray(type)) {
+                foreach(name, function(name) {
+                    foreach(type, function (type) {
+                        self.unlisten(name, type);
+                    });
+                });
+            }
+        }
+
+        return this;
+    };
+
+    /* Handle Events */
+    $plg.handle = function(type, handler) {
+        var $this = this;
+
+        if (isString(type) && isFunction(handler)) {
+            $this.listen('default', type, handler);
+        } else if (isObject(type)) {
+            $this.listen('default', type);
+        } else if (isArray(type) && isFunction(handler)) {
+            foreach(type, function (type) {
+                $this.listen('default', type, handler);
+            });
+        }
+
+        return this;
+    };
+
+    /* Unhandle events */
+    $plg.unhanlde = function(type) {
+        if (isString(type) || isArray(type)) {
+            this.unlisten('default', type);
+        }
+
+        return this;
+    }
 })(window.jQuery || false);
 
 (function($) {

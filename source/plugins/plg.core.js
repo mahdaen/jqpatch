@@ -284,5 +284,5 @@
             });
         }
     };
-    
+
 })(window.jQuery || false);

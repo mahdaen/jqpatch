@@ -18,12 +18,15 @@ module.exports = function(grunt) {
             core: {
                 files: {
                     'dist/jqpatch.js': [
+                        'source/header.js',
+
                         /* Externals */
                         'node_modules/native-js/dist/nativejs.clean.js',
                         'source/extensions/ext.polyfill.js',
 
                         /* Cores Patches */
                         'source/patches/ptc.core.js',
+                        'source/patches/ptc.style.js',
 
                         /* Core Plugins */
                         'source/plugins/plg.core.js',
@@ -33,6 +36,7 @@ module.exports = function(grunt) {
                         /* Extensions */
                         'source/extensions/ext.switch.js',
                         'source/extensions/ext.animation.js',
+                        'source/extensions/ext.events.js',
                         'source/extensions/ext.notification.js',
                     ]
                 }
@@ -49,6 +53,15 @@ module.exports = function(grunt) {
                 },
                 files: {
                     'dist/jqpatch.min.js': 'dist/jqpatch.js'
+                }
+            },
+            clean: {
+                options: {
+                    mangle: false,
+                    beautify: true,
+                },
+                files: {
+                    'dist/jqpatch.clean.js': 'dist/jqpatch.js'
                 }
             }
         },
@@ -68,6 +81,10 @@ module.exports = function(grunt) {
             core: {
                 files: ['source/**/*.js'],
                 tasks: ['concat', 'apidoc']
+            },
+            docs: {
+                files: ['tags/**/*.js'],
+                tasks: ['apidoc']
             }
         }
     });
