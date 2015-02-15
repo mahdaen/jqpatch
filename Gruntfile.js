@@ -38,6 +38,7 @@ module.exports = function(grunt) {
                         'source/extensions/ext.animation.js',
                         'source/extensions/ext.events.js',
                         'source/extensions/ext.notification.js',
+                        'source/extensions/ext.dataicon.js',
                     ]
                 }
             },

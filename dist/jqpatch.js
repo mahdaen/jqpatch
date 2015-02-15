@@ -1159,73 +1159,83 @@ function() {
 
 })(window.jQuery || false);
 
+/**
+ * Citraland Serang.
+ * Content Switcher Scripts
+ * Language: Javascript.
+ * Created by Stucel on 1/25/15.
+ * License: GNU General Public License v2 or later.
+ */
+
 (function($) {
-    'use strict';
-
-    /* Escape if no jQuery loaded */
-    if (!$) return;
-
     /* Plugins holder */
-    var $plg = $.fn;
+    var $plg = $.fn || $.module, $dom = $;
 
+    /* Default Counter */
     var defCount = 0;
 
-    /* Switch Effect Collections */
-    var SWEffects = {
-        /* Default Effect */
-        default: function(single) {
-            var $this = this;
-
-            if ($this.init) {
-                $this.init = false;
-                $this.target.css('opacity', 1).addClass('active').attr('switch-item', 'active');
-                $this.selectBtns.nth($this.current).addClass('active').attr('switch-select', 'active');
-            }
-
-            else {
-                /* Deactivate Active Item */
-                if ($this.active) {
-                    $this.active.remClass('active').ganimate({
-                        opacity: 0
-                    }, {
-                        duration: $this.options.duration,
-                        ease: $this.options.ease
-                    }, function() {
-                        $(this).attr('switch-item', '').addClass('inactive');
-                    });
-                }
-
-                /* If not single switch, activate target */
-                if (!single) {
-                    /* Activate Target Item */
-                    if ($this.target) {
-                        $this.target.remClass('inactive').ganimate({
-                            opacity: 1
-                        }, {
-                            duration: $this.options.duration,
-                            ease: $this.options.ease
-                        }, function() {
-                            $(this).attr('switch-item', 'active').addClass('active');
-                        });
-                    }
-                }
-
-                /* Activate Selected Item Selector */
-                $this.selectBtns
-                    .remClass('active')
-                    .attr('switch-select', 'inactive');
-
-                /* Get the current item and activate it */
-                $this.selectBtns
-                    .nth($this.current)
-                    .addClass('active')
-                    .attr('switch-select', 'active');
-            }
-
-            if (this.options.callback && isFunction(this.options.callback)) {
-                this.options.callback.call(this);
-            }
+    /* Attach to document ready event */
+    document.addEventListener('readystatechange', function() {
+        if (document.readyState == 'interactive') {
+            $('[switch]').initSwitch();
         }
+    });
+
+    /* jQuery or DOMList Plugin */
+    $plg.initSwitch = function() {
+        /* Pre init switch */
+        this.each(function() {
+            var id = $(this).attr('swid') || $(this).attr('swid', 'switch-#' + (defCount + 1)).attr('swid');
+
+            /* Pre init slider */
+            $(this).attr('preinit', true);
+
+            $('[switch-item]', this).attr('switch-item', id);
+            $('[switch-next]', this).attr('switch-next', id);
+            $('[switch-prev]', this).attr('switch-prev', id);
+            $('[switch-select]', this).attr('switch-select', id);
+            $('[switch-hide]', this).attr('switch-hide', id);
+            $('[switch-progress]', this).attr('switch-progress', id);
+        });
+
+        /* Creating Switch */
+        this.each(function() {
+            var slider = new Switch(this);
+            this.switcher = slider;
+        });
+
+        return this;
+    };
+    $plg.nextSwitch = function() {
+        return this.each(function() {
+            if (this.hasOwnProperty('slider')) {
+                this.switcher.next();
+            }
+        });
+    };
+    $plg.prevSwitch = function() {
+        return this.each(function() {
+            if (this.hasOwnProperty('slider')) {
+                this.switcher.prev();
+            }
+        });
+    };
+    $plg.goSwitch = function(idx) {
+        return this.each(function() {
+            if (this.hasOwnProperty('slider')) {
+                this.switcher.select(idx);
+            }
+        });
+    };
+    $plg.pauseSwitch = function() {
+        return this.each(function() {
+            $('.progress', this).pause();
+        });
+    };
+    $plg.resumeSwitch = function() {
+        return this.each(function() {
+            $('.progress', this).resume();
+        });
     };
 
     /* Content Switcher */
@@ -1385,20 +1395,6 @@ function() {
 
     /* Content Switcher Methods */
     Switch.prototype = {
-        animate: function(single) {
-            if (!this.init && this.options.auto) {
-                this.start();
-            }
-
-            if (SWEffects.hasOwnProperty(this.options.effect)) {
-                SWEffects[this.options.effect].call(this, single);
-            } else {
-                SWEffects['default'].call(this);
-            }
-
-            return this;
-        },
-
         next: function() {
             return this.select('next');
         },
@@ -1449,10 +1445,28 @@ function() {
             return this;
         },
 
+        animate: function(single) {
+            if (!this.init && this.options.auto) {
+                this.start();
+            }
+
+            if (SWEffects.hasOwnProperty(this.options.effect)) {
+                SWEffects[this.options.effect].call(this, single);
+            } else {
+                SWEffects['default'].call(this);
+            }
+
+            if (this.options.callback && isFunction(this.options.callback)) {
+                this.options.callback.call(this);
+            }
+
+            return this;
+        },
+
         start: function() {
             var $this = this;
 
-            $this.progress.animate({ width: '100%' }, this.options.auto, function() {
+            $this.progress.ganimate({ width: '100%' }, this.options.auto, function() {
                 $this.next();
             });
 
@@ -1471,72 +1485,82 @@ function() {
 
             return this;
         },
+    };
 
-        addEffect: function(name, handler) {
-            if (isString(name) && isFunction(handler)) {
-                SWEffects[name] = handler;
+    /* Effect maker */
+    Switch.addEffect = function(name, handler) {
+        if (isString(name) && isFunction(handler)) {
+            SWEffects[name] = handler;
+        }
+
+        else if (isObject(name)) {
+            foreach(name, function (name, handler) {
+                if (isFunction(handler)) {
+                    SWEffects[name] = handler;
+                }
+            });
+        }
+
+        return Switch;
+    };
+
+    /* Attach Switch to Window */
+    window.Switch = Switch;
+
+    /* Switch Effect Collections */
+    var SWEffects = {
+        /* Default Effect */
+        default: function(single) {
+            var $this = this;
+
+            if ($this.init) {
+                $this.init = false;
+                $this.target.css('opacity', 1).addClass('active').attr('switch-item', 'active');
+                $this.selectBtns.nth($this.current).addClass('active').attr('switch-select', 'active');
             }
 
-            return this;
+            else {
+                /* Deactivate Active Item */
+                if ($this.active) {
+                    $this.active.remClass('active').ganimate({
+                        opacity: 0
+                    }, {
+                        duration: $this.options.duration,
+                        ease: $this.options.ease
+                    }, function() {
+                        $(this).attr('switch-item', '').addClass('inactive');
+                    });
+                }
+
+                /* If not single switch, activate target */
+                if (!single) {
+                    /* Activate Target Item */
+                    if ($this.target) {
+                        $this.target.remClass('inactive').ganimate({
+                            opacity: 1
+                        }, {
+                            duration: $this.options.duration,
+                            ease: $this.options.ease
+                        }, function() {
+                            $(this).attr('switch-item', 'active').addClass('active');
+                        });
+                    }
+                }
+
+                /* Activate Selected Item Selector */
+                $this.selectBtns
+                    .remClass('active')
+                    .attr('switch-select', 'inactive');
+
+                /* Get the current item and activate it */
+                $this.selectBtns
+                    .nth($this.current)
+                    .addClass('active')
+                    .attr('switch-select', 'active');
+            }
         }
     };
-
-    $.module.nextSlide = function() {
-        return this.each(function() {
-            if (this.hasOwnProperty('slider')) {
-                this.switcher.next();
-            }
-        });
-    };
-    $.module.prevSlide = function() {
-        return this.each(function() {
-            if (this.hasOwnProperty('slider')) {
-                this.switcher.prev();
-            }
-        });
-    };
-    $.module.goSlide = function(idx) {
-        return this.each(function() {
-            if (this.hasOwnProperty('slider')) {
-                this.switcher.select(idx);
-            }
-        });
-    };
-    $.module.pauseSlide = function() {
-        return this.each(function() {
-            $('.progress', this).pause();
-        });
-    }
-    $.module.resumeSlide = function() {
-        return this.each(function() {
-            $('.progress', this).resume();
-        });
-    }
-
-    /* Attach to ready event */
-    $(document).ready(function() {
-        /* Pre init switch */
-        $('[switch]').each(function() {
-            var id = $(this).attr('swid') || $(this).attr('swid', 'switch-#' + (defCount + 1)).attr('swid');
-
-            /* Pre init slider */
-            $(this).attr('preinit', true);
-
-            $('[switch-item]', this).attr('switch-item', id);
-            $('[switch-next]', this).attr('switch-next', id);
-            $('[switch-prev]', this).attr('switch-prev', id);
-            $('[switch-select]', this).attr('switch-select', id);
-            $('[switch-hide]', this).attr('switch-hide', id);
-            $('[switch-progress]', this).attr('switch-progress', id);
-        });
-
-        /* Creating Switch */
-        $('[switch]').each(function() {
-            var slider = new Switch(this);
-            this.switcher = slider;
-        });
-    });
-})(window.jQuery || false);
+})(window.DOMList || window.jQuery);
 
 (function($) {
     'use strict';
@@ -2009,3 +2033,62 @@ function() {
 
     $.notification = function(message, options) { return new DOMNotice(message, options) };
 })(window.jQuery || false);
+
+/**
+ * Citraland Serang.
+ * Icon Generator Scripts.
+ * Language: Javascript.
+ * Created by Stucel on 1/25/15.
+ * License: GNU General Public License v2 or later.
+ */
+
+(function($) {
+    /* Add to ready event */
+    document.addEventListener('readystatechange', function() {
+        if (document.readyState == 'interactive') {
+            /* Find elements that has attribute icon-a or icon-b */
+            $('[icon-a]').each(function() {
+                var icona = $(this).attr('icon-a');
+
+                if (icona && window.DataIcons[icona]) {
+                    $(this).attr('icon-a', window.DataIcons[icona]).addClass('ready');
+                }
+            });
+
+            $('[icon]').each(function() {
+                var iconb = $(this).attr('icon');
+
+                if (iconb && window.DataIcons[iconb]) {
+                    $(this).attr('icon', window.DataIcons[iconb]).addClass('ready');
+                }
+            });
+        }
+    });
+
+    /* Data Icon List */
+    var DataIcons = function() {
+        return this;
+    };
+
+    /* Data Icon Prototypes */
+    DataIcons.prototype = {
+        push: function(name, value) {
+            var $this = this;
+
+            if (isString(name) && isString(value)) {
+                $this[name] = value;
+            }
+
+            else if (isObject(name)) {
+                foreach(name, function (name, value) {
+                    $this[name] = value;
+                });
+            }
+
+            return this;
+        }
+    };
+
+    /* Attach to Window */
+    window.DataIcons = new DataIcons;
+})(window.DOMList || window.jQuery);

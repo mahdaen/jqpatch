@@ -504,151 +504,154 @@ function() {
         };
     }
 }(window.jQuery || !1), function($) {
-    "use strict";
-    if ($) {
-        var defCount = ($.fn, 0), SWEffects = {
-            "default": function(single) {
-                var $this = this;
-                $this.init ? ($this.init = !1, $this.target.css("opacity", 1).addClass("active").attr("switch-item", "active"), 
-                $this.selectBtns.nth($this.current).addClass("active").attr("switch-select", "active")) : ($this.active && $this.active.remClass("active").ganimate({
-                    opacity: 0
-                }, {
-                    duration: $this.options.duration,
-                    ease: $this.options.ease
-                }, function() {
-                    $(this).attr("switch-item", "").addClass("inactive");
-                }), single || $this.target && $this.target.remClass("inactive").ganimate({
-                    opacity: 1
-                }, {
-                    duration: $this.options.duration,
-                    ease: $this.options.ease
-                }, function() {
-                    $(this).attr("switch-item", "active").addClass("active");
-                }), $this.selectBtns.remClass("active").attr("switch-select", "inactive"), $this.selectBtns.nth($this.current).addClass("active").attr("switch-select", "active")), 
-                this.options.callback && isFunction(this.options.callback) && this.options.callback.call(this);
-            }
-        }, Switch = function($object) {
-            if (isHTML($object)) {
-                var $holder = $($object), $this = this, defCf = {
-                    auto: !1,
-                    hoverPause: !1,
-                    "default": 1,
-                    duration: 1,
-                    hover: !1,
-                    ease: Power3.easeInOut || "Linear",
-                    effect: "default"
-                };
-                if (this.ID = $holder.attr("swid") || "switch" + (defCount + 1), defCount++, this.preInit = $holder.attr("preinit") ? !0 : !1, 
-                this.current = 0, this.init = !0, this.holder = $object, this.options = $holder.attr("switch"), 
-                this.options = this.options ? Object.merge(defCf, this.options) : defCf, (!this.options.duration || this.options.duration <= 0) && (this.options.duration = 1), 
-                this.options.hoverPause && $(this.holder).hover(function(e) {
-                    "enter" === e.status ? $(".progress", this).pause() : "leave" === e.status && $(".progress", this).resume();
-                }), this.preInit) {
-                    var vqr = '="' + this.ID + '"';
-                    $holder.remAttr("preinit");
-                } else var vqr = "";
-                if (this.items = $("[switch-item" + vqr + "]", this.holder), this.nextBtn = $("[switch-next" + vqr + "]", this.holder).click(function(e) {
-                    e.preventDefault(), $this.next();
-                }), this.prevBtn = $("[switch-prev" + vqr + "]", this.holder).click(function(e) {
-                    e.preventDefault(), $this.prev();
-                }), this.selectBtns = $("[switch-select" + vqr + "]", this.holder).click(function(e) {
-                    e.preventDefault();
-                    var idx = $this.selectBtns.indexOf(this);
-                    $this.select(idx);
-                }), this.options.hover) {
-                    var hvTime = setTimeout(function() {});
-                    this.selectBtns.mouseenter(function(e) {
-                        e.preventDefault();
-                        var self = this;
-                        clearTimeout(hvTime), hvTime = setTimeout(function() {
-                            self.click();
-                        }, 200);
-                    }).mouseleave(function() {
-                        clearTimeout(hvTime);
-                    });
-                }
-                return this.closer = $("[switch-hide" + vqr + "]", this.holder).click(function(e) {
-                    e.preventDefault(), $this.hide();
-                }), this.progress = $("[switch-progress" + vqr + "]", this.holder), this.options.auto && this.progress.length <= 0 && (this.progress = $('<div class="progress">').attr("switch-progress", this.ID).prependTo(this.holder)), 
-                isNumber(this.options["default"]) ? this.items.each(function(i) {
-                    i + 1 === $this.options["default"] ? $this.select(i) : $(this).addClass("inactive");
-                }) : (this.init = !1, this.items.addClass("inactive").attr("switch-item", "inactive")), 
-                this.options.auto && $.loaded(function() {
-                    $this.start();
-                }), this;
-            }
-        };
-        Switch.prototype = {
-            animate: function(single) {
-                return !this.init && this.options.auto && this.start(), SWEffects.hasOwnProperty(this.options.effect) ? SWEffects[this.options.effect].call(this, single) : SWEffects["default"].call(this), 
-                this;
-            },
-            next: function() {
-                return this.select("next");
-            },
-            prev: function() {
-                return this.select("prev");
-            },
-            select: function(index) {
-                var $this = this;
-                return $this.active = $this.items.filter('[switch-item="active"]'), isNumber(index) ? ($this.target = $this.items.nth(index), 
-                $this.current = index, $this.target.length <= 0 && ($this.target = $this.items.nth(0), 
-                $this.current = 0)) : isString(index) && ("next" === index ? $this.current >= $this.items.length - 1 ? ($this.target = $this.items.first(), 
-                $this.current = 0) : ($this.target = $this.items.nth($this.current + 1), $this.current++) : "prev" === index && ($this.current <= 0 ? ($this.target = $this.items.last(), 
-                $this.current = $this.items.length - 1) : ($this.target = $this.items.nth($this.current - 1), 
-                $this.current--))), this.stop(), this.animate(), this;
-            },
-            start: function() {
-                var $this = this;
-                return $this.progress.animate({
-                    width: "100%"
-                }, this.options.auto, function() {
-                    $this.next();
-                }), this;
-            },
-            stop: function() {
-                return this.progress.kill().css("width", 0), this;
-            },
-            hide: function() {
-                return this.active = this.items.filter('[switch-item="active"]'), this.animate(!0), 
-                this;
-            },
-            addEffect: function(name, handler) {
-                return isString(name) && isFunction(handler) && (SWEffects[name] = handler), this;
-            }
-        }, $.module.nextSlide = function() {
-            return this.each(function() {
-                this.hasOwnProperty("slider") && this.switcher.next();
-            });
-        }, $.module.prevSlide = function() {
-            return this.each(function() {
-                this.hasOwnProperty("slider") && this.switcher.prev();
-            });
-        }, $.module.goSlide = function(idx) {
-            return this.each(function() {
-                this.hasOwnProperty("slider") && this.switcher.select(idx);
-            });
-        }, $.module.pauseSlide = function() {
-            return this.each(function() {
-                $(".progress", this).pause();
-            });
-        }, $.module.resumeSlide = function() {
-            return this.each(function() {
-                $(".progress", this).resume();
-            });
-        }, $(document).ready(function() {
-            $("[switch]").each(function() {
-                var id = $(this).attr("swid") || $(this).attr("swid", "switch-#" + (defCount + 1)).attr("swid");
-                $(this).attr("preinit", !0), $("[switch-item]", this).attr("switch-item", id), $("[switch-next]", this).attr("switch-next", id), 
-                $("[switch-prev]", this).attr("switch-prev", id), $("[switch-select]", this).attr("switch-select", id), 
-                $("[switch-hide]", this).attr("switch-hide", id), $("[switch-progress]", this).attr("switch-progress", id);
-            }), $("[switch]").each(function() {
-                var slider = new Switch(this);
-                this.switcher = slider;
-            });
+    var $plg = $.fn || $.module, defCount = 0;
+    document.addEventListener("readystatechange", function() {
+        "interactive" == document.readyState && $("[switch]").initSwitch();
+    }), $plg.initSwitch = function() {
+        return this.each(function() {
+            var id = $(this).attr("swid") || $(this).attr("swid", "switch-#" + (defCount + 1)).attr("swid");
+            $(this).attr("preinit", !0), $("[switch-item]", this).attr("switch-item", id), $("[switch-next]", this).attr("switch-next", id), 
+            $("[switch-prev]", this).attr("switch-prev", id), $("[switch-select]", this).attr("switch-select", id), 
+            $("[switch-hide]", this).attr("switch-hide", id), $("[switch-progress]", this).attr("switch-progress", id);
+        }), this.each(function() {
+            var slider = new Switch(this);
+            this.switcher = slider;
+        }), this;
+    }, $plg.nextSwitch = function() {
+        return this.each(function() {
+            this.hasOwnProperty("slider") && this.switcher.next();
         });
-    }
-}(window.jQuery || !1), function($) {
+    }, $plg.prevSwitch = function() {
+        return this.each(function() {
+            this.hasOwnProperty("slider") && this.switcher.prev();
+        });
+    }, $plg.goSwitch = function(idx) {
+        return this.each(function() {
+            this.hasOwnProperty("slider") && this.switcher.select(idx);
+        });
+    }, $plg.pauseSwitch = function() {
+        return this.each(function() {
+            $(".progress", this).pause();
+        });
+    }, $plg.resumeSwitch = function() {
+        return this.each(function() {
+            $(".progress", this).resume();
+        });
+    };
+    var Switch = function($object) {
+        if (isHTML($object)) {
+            var $holder = $($object), $this = this, defCf = {
+                auto: !1,
+                hoverPause: !1,
+                "default": 1,
+                duration: 1,
+                hover: !1,
+                ease: Power3.easeInOut || "Linear",
+                effect: "default"
+            };
+            if (this.ID = $holder.attr("swid") || "switch" + (defCount + 1), defCount++, this.preInit = $holder.attr("preinit") ? !0 : !1, 
+            this.current = 0, this.init = !0, this.holder = $object, this.options = $holder.attr("switch"), 
+            this.options = this.options ? Object.merge(defCf, this.options) : defCf, (!this.options.duration || this.options.duration <= 0) && (this.options.duration = 1), 
+            this.options.hoverPause && $(this.holder).hover(function(e) {
+                "enter" === e.status ? $(".progress", this).pause() : "leave" === e.status && $(".progress", this).resume();
+            }), this.preInit) {
+                var vqr = '="' + this.ID + '"';
+                $holder.remAttr("preinit");
+            } else var vqr = "";
+            if (this.items = $("[switch-item" + vqr + "]", this.holder), this.nextBtn = $("[switch-next" + vqr + "]", this.holder).click(function(e) {
+                e.preventDefault(), $this.next();
+            }), this.prevBtn = $("[switch-prev" + vqr + "]", this.holder).click(function(e) {
+                e.preventDefault(), $this.prev();
+            }), this.selectBtns = $("[switch-select" + vqr + "]", this.holder).click(function(e) {
+                e.preventDefault();
+                var idx = $this.selectBtns.indexOf(this);
+                $this.select(idx);
+            }), this.options.hover) {
+                var hvTime = setTimeout(function() {});
+                this.selectBtns.mouseenter(function(e) {
+                    e.preventDefault();
+                    var self = this;
+                    clearTimeout(hvTime), hvTime = setTimeout(function() {
+                        self.click();
+                    }, 200);
+                }).mouseleave(function() {
+                    clearTimeout(hvTime);
+                });
+            }
+            return this.closer = $("[switch-hide" + vqr + "]", this.holder).click(function(e) {
+                e.preventDefault(), $this.hide();
+            }), this.progress = $("[switch-progress" + vqr + "]", this.holder), this.options.auto && this.progress.length <= 0 && (this.progress = $('<div class="progress">').attr("switch-progress", this.ID).prependTo(this.holder)), 
+            isNumber(this.options["default"]) ? this.items.each(function(i) {
+                i + 1 === $this.options["default"] ? $this.select(i) : $(this).addClass("inactive");
+            }) : (this.init = !1, this.items.addClass("inactive").attr("switch-item", "inactive")), 
+            this.options.auto && $.loaded(function() {
+                $this.start();
+            }), this;
+        }
+    };
+    Switch.prototype = {
+        next: function() {
+            return this.select("next");
+        },
+        prev: function() {
+            return this.select("prev");
+        },
+        select: function(index) {
+            var $this = this;
+            return $this.active = $this.items.filter('[switch-item="active"]'), isNumber(index) ? ($this.target = $this.items.nth(index), 
+            $this.current = index, $this.target.length <= 0 && ($this.target = $this.items.nth(0), 
+            $this.current = 0)) : isString(index) && ("next" === index ? $this.current >= $this.items.length - 1 ? ($this.target = $this.items.first(), 
+            $this.current = 0) : ($this.target = $this.items.nth($this.current + 1), $this.current++) : "prev" === index && ($this.current <= 0 ? ($this.target = $this.items.last(), 
+            $this.current = $this.items.length - 1) : ($this.target = $this.items.nth($this.current - 1), 
+            $this.current--))), this.stop(), this.animate(), this;
+        },
+        animate: function(single) {
+            return !this.init && this.options.auto && this.start(), SWEffects.hasOwnProperty(this.options.effect) ? SWEffects[this.options.effect].call(this, single) : SWEffects["default"].call(this), 
+            this.options.callback && isFunction(this.options.callback) && this.options.callback.call(this), 
+            this;
+        },
+        start: function() {
+            var $this = this;
+            return $this.progress.ganimate({
+                width: "100%"
+            }, this.options.auto, function() {
+                $this.next();
+            }), this;
+        },
+        stop: function() {
+            return this.progress.kill().css("width", 0), this;
+        },
+        hide: function() {
+            return this.active = this.items.filter('[switch-item="active"]'), this.animate(!0), 
+            this;
+        }
+    }, Switch.addEffect = function(name, handler) {
+        return isString(name) && isFunction(handler) ? SWEffects[name] = handler : isObject(name) && foreach(name, function(name, handler) {
+            isFunction(handler) && (SWEffects[name] = handler);
+        }), Switch;
+    }, window.Switch = Switch;
+    var SWEffects = {
+        "default": function(single) {
+            var $this = this;
+            $this.init ? ($this.init = !1, $this.target.css("opacity", 1).addClass("active").attr("switch-item", "active"), 
+            $this.selectBtns.nth($this.current).addClass("active").attr("switch-select", "active")) : ($this.active && $this.active.remClass("active").ganimate({
+                opacity: 0
+            }, {
+                duration: $this.options.duration,
+                ease: $this.options.ease
+            }, function() {
+                $(this).attr("switch-item", "").addClass("inactive");
+            }), single || $this.target && $this.target.remClass("inactive").ganimate({
+                opacity: 1
+            }, {
+                duration: $this.options.duration,
+                ease: $this.options.ease
+            }, function() {
+                $(this).attr("switch-item", "active").addClass("active");
+            }), $this.selectBtns.remClass("active").attr("switch-select", "inactive"), $this.selectBtns.nth($this.current).addClass("active").attr("switch-select", "active"));
+        }
+    };
+}(window.DOMList || window.jQuery), function($) {
     "use strict";
     if ($) {
         var $plg = $.fn;
@@ -824,4 +827,25 @@ function() {
             return new DOMNotice(message, options);
         };
     }
-}(window.jQuery || !1);
+}(window.jQuery || !1), function($) {
+    document.addEventListener("readystatechange", function() {
+        "interactive" == document.readyState && ($("[icon-a]").each(function() {
+            var icona = $(this).attr("icon-a");
+            icona && window.DataIcons[icona] && $(this).attr("icon-a", window.DataIcons[icona]).addClass("ready");
+        }), $("[icon]").each(function() {
+            var iconb = $(this).attr("icon");
+            iconb && window.DataIcons[iconb] && $(this).attr("icon", window.DataIcons[iconb]).addClass("ready");
+        }));
+    });
+    var DataIcons = function() {
+        return this;
+    };
+    DataIcons.prototype = {
+        push: function(name, value) {
+            var $this = this;
+            return isString(name) && isString(value) ? $this[name] = value : isObject(name) && foreach(name, function(name, value) {
+                $this[name] = value;
+            }), this;
+        }
+    }, window.DataIcons = new DataIcons();
+}(window.DOMList || window.jQuery);
