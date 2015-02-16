@@ -37,7 +37,7 @@ define({ "api": [
     "examples": [
       {
         "title": "Sample",
-        "content": "// Animate with callback and special options in 3s.\n$dom('.card').ganimate({\n    color: 'red',\n    opacity: 0.5\n}, {\n    duration: 3,\n    ease: Power4.easeInOut\n}, function() {\n    console.log('animation finished');\n});\n\n// Animate without callback and special options in 5s.\n$dom('.card').ganimate({\n    opacity: 0.5,\n    backgroundColor: 'green'\n}, 5);",
+        "content": "// Animate with callback and special options in 3s.\n$('.card').ganimate({\n    color: 'red',\n    opacity: 0.5\n}, {\n    duration: 3,\n    ease: Power4.easeInOut\n}, function() {\n    console.log('animation finished');\n});\n\n// Animate without callback and special options in 5s.\n$('.card').ganimate({\n    opacity: 0.5,\n    backgroundColor: 'green'\n}, 5);",
         "type": "js"
       }
     ],
@@ -82,7 +82,7 @@ define({ "api": [
     "examples": [
       {
         "title": "Sample",
-        "content": "$dom('.card').keyframes({\n   10: {\n       color: 'red'\n   },\n   50: {\n       color: 'green'\n   },\n   100: {\n       color: 'blue'\n   }\n}, {\n    duration: 5,\n    ease: Power3.easeInOut\n}, function() {\n    console.log('Keyframes finished.');\n});",
+        "content": "$('.card').keyframes({\n   10: {\n       color: 'red'\n   },\n   50: {\n       color: 'green'\n   },\n   100: {\n       color: 'blue'\n   }\n}, {\n    duration: 5,\n    ease: Power3.easeInOut\n}, function() {\n    console.log('Keyframes finished.');\n});",
         "type": "js"
       }
     ],
@@ -901,6 +901,37 @@ define({ "api": [
         "title": "Sample #1",
         "content": "$('span').hasData('foo'); // Check does has data-attribute 'data-foo'.\n$('span').hasData(['foo', 'bar']); // Check does has data-attribute 'data-foo' or 'data-bar'.\n$('span').hasData('foo bar'); // Check does has data-attribute 'data-foo' and 'data-bar'.",
         "type": "json"
+      }
+    ],
+    "filename": "tags/v1.0.0.js",
+    "groupTitle": "jQPatch"
+  },
+  {
+    "version": "1.0.2",
+    "group": "jQPatch",
+    "type": "indexof",
+    "url": "jQuery.indexOf(element);",
+    "title": ".indexOf()",
+    "name": "IndexOf",
+    "description": "<p>Get index of element from selected elements.</p> ",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "HTMLElement",
+            "optional": false,
+            "field": "element",
+            "description": "<p>HTML ELement or string CSS Selector. Return -1 if not found.</p> "
+          }
+        ]
+      }
+    },
+    "examples": [
+      {
+        "title": "Sample",
+        "content": "// Get index number using HTML Element.\nvar span = $('span').get(2);\n$('span').indexOf(span); // Return 2\n\n// Get index number using selector.\n$('span').indexOf('.foo');",
+        "type": "js"
       }
     ],
     "filename": "tags/v1.0.0.js",

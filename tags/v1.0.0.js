@@ -608,7 +608,7 @@
  *
  * @apiExample {js} Sample
  * // Animate with callback and special options in 3s.
- * $dom('.card').ganimate({
+ * $('.card').ganimate({
  *     color: 'red',
  *     opacity: 0.5
  * }, {
@@ -619,7 +619,7 @@
  * });
  *
  * // Animate without callback and special options in 5s.
- * $dom('.card').ganimate({
+ * $('.card').ganimate({
  *     opacity: 0.5,
  *     backgroundColor: 'green'
  * }, 5);
@@ -638,7 +638,7 @@
  * @apiParam {Function} [callback] Callback that will be called when keyframes finished.
  *
  * @apiExample {js} Sample
- * $dom('.card').keyframes({
+ * $('.card').keyframes({
  *    10: {
  *        color: 'red'
  *    },
@@ -710,4 +710,24 @@
  * @apiName timeScale
  * @apiDescription Scale animation time in selected elements.
  * @apiParam {Number} scale Number of scale time.
+ */
+
+
+/**
+ * @apiVersion 1.0.2
+ * @apiGroup jQPatch
+ *
+ * @api {indexof} jQuery.indexOf(element); .indexOf()
+ * @apiName IndexOf
+ * @apiDescription Get index of element from selected elements.
+ *
+ * @apiParam {HTMLElement} element HTML ELement or string CSS Selector. Return -1 if not found.
+ *
+ * @apiExample {js} Sample
+ * // Get index number using HTML Element.
+ * var span = $('span').get(2);
+ * $('span').indexOf(span); // Return 2
+ *
+ * // Get index number using selector.
+ * $('span').indexOf('.foo');
  */

@@ -278,6 +278,8 @@ function() {
                 });
             }
             return this;
+        }, $plg.indexOf = function(elem) {
+            return isHTML(elem) ? this.toArray().indexOf(elem) : isString(elem) ? this.toArray().indexOf(this.filter(elem).get()) : -1;
         };
     }
 }(window.jQuery || !1), function($) {

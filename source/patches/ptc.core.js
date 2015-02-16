@@ -244,4 +244,15 @@
 
         return this;
     }
+
+    /* Module to get index number of element */
+    $plg.indexOf = function(elem) {
+        if (isHTML(elem)) {
+            return this.toArray().indexOf(elem);
+        } else if (isString(elem)) {
+            return this.toArray().indexOf(this.filter(elem).get());
+        }
+
+        return -1;
+    };
 })(window.jQuery || false);
