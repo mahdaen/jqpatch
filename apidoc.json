@@ -1,6 +1,6 @@
 {
     "name": "jqpatch",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "description": "A collections of jQuery plugins to patch the original plugins. Also contains new plugins.",
     "title": "jQuery Patch Collections"
 }

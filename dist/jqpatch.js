@@ -7,6 +7,8 @@
  * License: GNU General Public License v2 or later.
  */
 
+/* Creating Public Variable Holder */
+window.jqpatch = {};
 if (!window) var window = {};
 
 !function(native) {
@@ -1188,9 +1190,16 @@ function() {
     /* Attach to document ready event */
     document.addEventListener('readystatechange', function() {
         if (document.readyState == 'interactive') {
-            $('[switch]').initSwitch();
+            jqpatch.initswitch();
         }
     });
+
+    /* Initializer */
+    jqpatch.initswitch = function(context) {
+        !context ? document : context;
+
+        $('[switch]', context).initSwitch();
+    };
 
     /* jQuery or DOMList Plugin */
     $plg.initSwitch = function() {
@@ -2057,24 +2066,31 @@ function() {
     /* Add to ready event */
     document.addEventListener('readystatechange', function() {
         if (document.readyState == 'interactive') {
-            /* Find elements that has attribute icon-a or icon-b */
-            $('[icon-a]').each(function() {
-                var icona = $(this).attr('icon-a');
-
-                if (icona && window.DataIcons[icona]) {
-                    $(this).attr('icon-a', window.DataIcons[icona]).addClass('ready');
-                }
-            });
-
-            $('[icon]').each(function() {
-                var iconb = $(this).attr('icon');
-
-                if (iconb && window.DataIcons[iconb]) {
-                    $(this).attr('icon', window.DataIcons[iconb]).addClass('ready');
-                }
-            });
+            jqpatch.initicon();
         }
     });
+
+    /* Initializer */
+    jqpatch.initicon = function(context) {
+        !context ? document : context;
+
+        /* Find elements that has attribute icon-a or icon-b */
+        $('[icon-a]', context).each(function() {
+            var icona = $(this).attr('icon-a');
+
+            if (icona && window.DataIcons[icona]) {
+                $(this).attr('icon-a', window.DataIcons[icona]).addClass('ready');
+            }
+        });
+
+        $('[icon]', context).each(function() {
+            var iconb = $(this).attr('icon');
+
+            if (iconb && window.DataIcons[iconb]) {
+                $(this).attr('icon', window.DataIcons[iconb]).addClass('ready');
+            }
+        });
+    };
 
     /* Data Icon List */
     var DataIcons = function() {
@@ -2103,3 +2119,15 @@ function() {
     /* Attach to Window */
     window.DataIcons = new DataIcons;
 })(window.DOMList || window.jQuery);
+
+/* jQPatch Reinitializer for Ajax purpose */
+jqpatch.reinit = function(context) {
+    /* Reinit icons */
+    jqpatch.initicon(context);
+
+    /* Reinit background image */
+    jqpatch.initbg(context);
+
+    /* Reinit context */
+    jqpatch.initswitch(context);
+}

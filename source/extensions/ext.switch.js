@@ -16,9 +16,16 @@
     /* Attach to document ready event */
     document.addEventListener('readystatechange', function() {
         if (document.readyState == 'interactive') {
-            $('[switch]').initSwitch();
+            jqpatch.initswitch();
         }
     });
+
+    /* Initializer */
+    jqpatch.initswitch = function(context) {
+        !context ? document : context;
+
+        $('[switch]', context).initSwitch();
+    };
 
     /* jQuery or DOMList Plugin */
     $plg.initSwitch = function() {

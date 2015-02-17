@@ -1,4 +1,4 @@
-if (!window) var window = {};
+if (window.jqpatch = {}, !window) var window = {};
 
 !function(native) {
     return "undefined" != typeof module && module.exports ? void (module.exports = native()) : native();
@@ -508,8 +508,10 @@ function() {
 }(window.jQuery || !1), function($) {
     var $plg = $.fn || $.module, defCount = 0;
     document.addEventListener("readystatechange", function() {
-        "interactive" == document.readyState && $("[switch]").initSwitch();
-    }), $plg.initSwitch = function() {
+        "interactive" == document.readyState && jqpatch.initswitch();
+    }), jqpatch.initswitch = function(context) {
+        context ? context : document, $("[switch]", context).initSwitch();
+    }, $plg.initSwitch = function() {
         return this.each(function() {
             var id = $(this).attr("swid") || $(this).attr("swid", "switch-#" + (defCount + 1)).attr("swid");
             $(this).attr("preinit", !0), $("[switch-item]", this).attr("switch-item", id), $("[switch-next]", this).attr("switch-next", id), 
@@ -831,14 +833,16 @@ function() {
     }
 }(window.jQuery || !1), function($) {
     document.addEventListener("readystatechange", function() {
-        "interactive" == document.readyState && ($("[icon-a]").each(function() {
+        "interactive" == document.readyState && jqpatch.initicon();
+    }), jqpatch.initicon = function(context) {
+        context ? context : document, $("[icon-a]", context).each(function() {
             var icona = $(this).attr("icon-a");
             icona && window.DataIcons[icona] && $(this).attr("icon-a", window.DataIcons[icona]).addClass("ready");
-        }), $("[icon]").each(function() {
+        }), $("[icon]", context).each(function() {
             var iconb = $(this).attr("icon");
             iconb && window.DataIcons[iconb] && $(this).attr("icon", window.DataIcons[iconb]).addClass("ready");
-        }));
-    });
+        });
+    };
     var DataIcons = function() {
         return this;
     };
@@ -850,4 +854,6 @@ function() {
             }), this;
         }
     }, window.DataIcons = new DataIcons();
-}(window.DOMList || window.jQuery);
+}(window.DOMList || window.jQuery), jqpatch.reinit = function(context) {
+    jqpatch.initicon(context), jqpatch.initbg(context), jqpatch.initswitch(context);
+};

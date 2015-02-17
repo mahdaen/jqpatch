@@ -6,3 +6,6 @@
  * Requires: jQuery
  * License: GNU General Public License v2 or later.
  */
+
+/* Creating Public Variable Holder */
+window.jqpatch = {};
