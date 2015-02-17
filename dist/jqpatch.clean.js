@@ -854,6 +854,18 @@ function() {
             }), this;
         }
     }, window.DataIcons = new DataIcons();
-}(window.DOMList || window.jQuery), jqpatch.reinit = function(context) {
+}(window.DOMList || window.jQuery), function($) {
+    $.fn || $.module;
+    document.addEventListener("readystatechange", function() {
+        "interactive" == document.readyState && jqpatch.initbg();
+    }), jqpatch.initbg = function(context) {
+        context ? context : document, $("[background-img]", context).each(function() {
+            var self = $(this), src = this.getAttribute("background-img"), nImg = $("<img>").attr("src", src);
+            nImg.handle("load", function() {
+                self.css("background-image", "url(" + src + ")").remAttr("background-img");
+            }), this.hasAttribute("x") && !this.hasAttribute("y") ? self.css("background-position", this.getAttribute("x") + " center").remAttr("x") : this.hasAttribute("y") && !this.hasAttribute("x") ? self.css("background-position", "center " + this.getAttribute("y")).remAttr("y") : this.hasAttribute("x") && this.hasAttribute("y") && self.css("background-position", this.getAttribute("x") + " " + this.getAttribute("y")).remAttr([ "x", "y" ]);
+        });
+    };
+}(window.jQuery), jqpatch.reinit = function(context) {
     jqpatch.initicon(context), jqpatch.initbg(context), jqpatch.initswitch(context);
 };
