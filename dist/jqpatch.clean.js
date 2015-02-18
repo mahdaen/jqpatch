@@ -280,6 +280,8 @@ function() {
             return this;
         }, $plg.indexOf = function(elem) {
             return isHTML(elem) ? this.toArray().indexOf(elem) : isString(elem) ? this.toArray().indexOf(this.filter(elem).get()) : -1;
+        }, $plg.parentUntil = function(query) {
+            return this.parent().get() === $("body").get() ? $() : isString(query) ? this.parent().filter(query).length > 0 ? this.parent() : this.parent().parentUntil(query) : isFunction(query) ? query.call(this.parent().get()) ? this.parent() : this.parent().parentUntil(query) : this;
         };
     }
 }(window.jQuery || !1), function($) {

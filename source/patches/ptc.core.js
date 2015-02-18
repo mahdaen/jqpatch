@@ -255,4 +255,27 @@
 
         return -1;
     };
+
+    /* Module to get parent element until meet with condition */
+    $plg.parentUntil = function(query) {
+        if (this.parent().get() === $('body').get()) return $();
+
+        if (isString(query)) {
+            if (this.parent().filter(query).length > 0) {
+                return this.parent();
+            } else {
+                return this.parent().parentUntil(query);
+            }
+        }
+
+        else if (isFunction(query)) {
+            if (query.call(this.parent().get())) {
+                return this.parent();
+            } else {
+                return this.parent().parentUntil(query);
+            }
+        }
+
+        return this;
+    };
 })(window.jQuery || false);
