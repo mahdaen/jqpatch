@@ -14,58 +14,15 @@ module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
 
-        concat: {
-            core: {
-                files: {
-                    'dist/jqpatch.js': [
-                        'source/header.js',
-
-                        /* Externals */
-                        'node_modules/native-js/dist/nativejs.clean.js',
-                        'source/extensions/ext.polyfill.js',
-
-                        /* Cores Patches */
-                        'source/patches/ptc.core.js',
-                        'source/patches/ptc.style.js',
-
-                        /* Core Plugins */
-                        'source/plugins/plg.core.js',
-                        'source/plugins/plg.checker.js',
-                        'source/plugins/plg.style.js',
-
-                        /* Extensions */
-                        'source/extensions/ext.switch.js',
-                        'source/extensions/ext.animation.js',
-                        'source/extensions/ext.events.js',
-                        'source/extensions/ext.notification.js',
-                        'source/extensions/ext.dataicon.js',
-                        'source/extensions/ext.background.js',
-
-                        'source/footer.js',
-                    ]
-                }
-            },
-        },
-
-        /* Uglifying Scripts */
-        uglify: {
-            build: {
+        exports: {
+            main: {
                 options: {
-                    mangle: true,
-                    sourceMap: true,
-                    sourceMapName: 'dist/jqpatch.min.map'
+                    uglify: true,
+                    verbose: true,
+                    noscript: true
                 },
                 files: {
-                    'dist/jqpatch.min.js': 'dist/jqpatch.js'
-                }
-            },
-            clean: {
-                options: {
-                    mangle: false,
-                    beautify: true,
-                },
-                files: {
-                    'dist/jqpatch.clean.js': 'dist/jqpatch.js'
+                    'dist': 'source/jqpatch.js'
                 }
             }
         },
@@ -84,7 +41,7 @@ module.exports = function(grunt) {
             },
             core: {
                 files: ['source/**/*.js'],
-                tasks: ['concat', 'apidoc']
+                tasks: ['exports', 'apidoc']
             },
             docs: {
                 files: ['tags/**/*.js'],
@@ -94,14 +51,13 @@ module.exports = function(grunt) {
     });
 
     /* Loading Tasks */
-    grunt.loadNpmTasks('grunt-contrib-concat');
-    grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-export');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-apidoc');
 
     /* Registering Tasks */
-    grunt.registerTask('devel', ['concat', 'apidoc', 'watch']);
-    grunt.registerTask('build', ['concat', 'apidoc', 'uglify']);
+    grunt.registerTask('devel', ['exports', 'apidoc', 'watch']);
+    grunt.registerTask('build', ['exports', 'apidoc', 'uglify']);
 
     grunt.registerTask('docs', ['apidoc']);
 }

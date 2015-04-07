@@ -208,4 +208,9 @@
 
         return this;
     }
+
+    /* Patching Loaded Event */
+    $.loaded = function(handler) {
+        $(document).ready(handler);
+    }
 })(window.jQuery || false);

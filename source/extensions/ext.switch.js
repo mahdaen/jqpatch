@@ -1,9 +1,5 @@
 /**
- * Citraland Serang.
  * Content Switcher Scripts
- * Language: Javascript.
- * Created by Stucel on 1/25/15.
- * License: GNU General Public License v2 or later.
  */
 
 (function($) {

@@ -9,3 +9,13 @@
 
 /* Creating Public Variable Holder */
 window.jqpatch = {};
+
+/* Importing Parts*/
+/* --------------------- */
+'@import ../node_modules/native-js/dist/nativejs.clean';
+'@import patches/ptc';
+'@import plugins/plg';
+'@import extensions/ext';
+
+/* Importing footer */
+'@import footer';

@@ -1,24 +1,24 @@
 {
-    "name": "jqpatch",
-    "version": "1.0.5",
-    "description": "A collections of jQuery plugins patches.",
-    "readme": "readme.md",
-    "keywords": [
+    "name"        : "jqpatch",
+    "version"     : "1.0.6",
+    "description" : "A collections of jQuery plugins patches.",
+    "readme"      : "readme.md",
+    "keywords"    : [
         "jqpatch",
         "jquery",
         "jquery plugin"
     ],
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/mahdaen/jqpatch.git"
+    "repository"  : {
+        "type" : "git",
+        "url"  : "https://github.com/mahdaen/jqpatch.git"
     },
-    "license": "MIT",
-    "authors": [
+    "license"     : "MIT",
+    "authors"     : [
         "Nanang Mahdaen El Agung <mahdaen@gmail.com>"
     ],
-    "main": "dist/domlist.js",
-    "homepage": "https://mahdaen.github.io/jqpatch",
-    "ignore": [
+    "main"        : "dist/domlist.js",
+    "homepage"    : "https://mahdaen.github.io/jqpatch",
+    "ignore"      : [
         "**/.*",
         "node_modules",
         "bower_components",
