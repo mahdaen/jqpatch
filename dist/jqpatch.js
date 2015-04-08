@@ -12,14 +12,9 @@ window.jqpatch = {};
 
 /* Importing Parts*/
 /* --------------------- */
-if (!window) var window = {};
+if ("undefined" == typeof window) var window = {};
 
-! function (native) {
-    return "undefined" != typeof module && module.exports ? void(module.exports = native()) : native();
-}(function () {
-    return window;
-}), window.__nconfig = {},
-    function () {
+if (window.__nconfig = {}, function () {
         var isDefined = function ($object) {
             return "undefined" != typeof $object ? !0 : !1;
         };
@@ -110,8 +105,7 @@ if (!window) var window = {};
         window.isDate = function ($object) {
             return isDate($object);
         };
-    }(),
-    function () {
+    }(), function () {
         var foreach = function (object, handler, thisArg) {
                 if (window.isFunction(handler))
                     if (window.isArray(object) && window.isFunction(handler))
@@ -172,7 +166,10 @@ if (!window) var window = {};
         window.func = function ($name, $handler) {
             return new func($name, $handler);
         };
-    }();
+    }(), "undefined" != typeof global && !global.foreach) {
+    for (var key in window) global[key] = window[key];
+    module.exports = window;
+}
 
 (function ($) {
     'use strict';
@@ -1320,6 +1317,30 @@ if (!window) var window = {};
             }
         });
     };
+    /* Data Icon List */
+    var DataIcons = function () {
+        return this;
+    };
+
+    /* Data Icon Prototypes */
+    DataIcons.prototype = {
+        push: function (name, value) {
+            var $this = this;
+
+            if (isString(name) && isString(value)) {
+                $this[name] = value;
+            } else if (isObject(name)) {
+                foreach(name, function (name, value) {
+                    $this[name] = value;
+                });
+            }
+
+            return this;
+        }
+    };
+
+    /* Attach to Window */
+    window.DataIcons = new DataIcons();
 })(window.DOMList || window.jQuery);
 
 (function ($) {

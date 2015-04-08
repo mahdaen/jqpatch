@@ -31,4 +31,30 @@
             }
         });
     };
+    /* Data Icon List */
+    var DataIcons = function() {
+        return this;
+    };
+
+    /* Data Icon Prototypes */
+    DataIcons.prototype = {
+        push: function(name, value) {
+            var $this = this;
+
+            if (isString(name) && isString(value)) {
+                $this[name] = value;
+            }
+
+            else if (isObject(name)) {
+                foreach(name, function (name, value) {
+                    $this[name] = value;
+                });
+            }
+
+            return this;
+        }
+    };
+
+    /* Attach to Window */
+    window.DataIcons = new DataIcons();
 })(window.DOMList || window.jQuery);
