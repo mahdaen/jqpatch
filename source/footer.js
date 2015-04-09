@@ -8,4 +8,7 @@ jqpatch.reinit = function(context) {
 
     /* Reinit context */
     jqpatch.initswitch(context);
+
+    /* Reinit BoxFill */
+    jqpatch.initboxfill(context);
 }

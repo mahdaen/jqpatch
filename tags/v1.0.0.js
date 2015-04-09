@@ -731,3 +731,25 @@
  * // Get index number using selector.
  * $('span').indexOf('.foo');
  */
+
+/**
+ * @apiVersion 1.1.0
+ * @apiGroup Extensions
+ *
+ * @api {box-fill} box-fill box-fill
+ * @apiName BoxFill
+ * @apiDescription Capture the tallest childrens height or maintain childrens height to the tallest height.
+ *
+ * @apiParam {HTMLAttribute} box-fill String box-fill type: capture-children or maintain-children
+ * @apiParam {HTMLAttribute} box-child The the box fill that this element is children of box-fill.
+ *
+ * @apiExample {html} HTML
+ * <ul box-fill="capture-children">
+ *     <li box-child style="height: 20px"></li>
+ *     <li box-child style="height: 30px"></li>
+ *     <li box-child style="height: 40px"></li>
+ *     <li box-child style="height: 50px"></li>
+ * </ul>
+ */
+
+//
