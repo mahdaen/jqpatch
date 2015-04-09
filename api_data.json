@@ -466,6 +466,44 @@
     "groupTitle": "EventProvider"
   },
   {
+    "version": "1.1.0",
+    "group": "Extensions",
+    "type": "box-fill",
+    "url": "box-fill",
+    "title": "box-fill",
+    "name": "BoxFill",
+    "description": "<p>Capture the tallest childrens height or maintain childrens height to the tallest height.</p> ",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "HTMLAttribute",
+            "optional": false,
+            "field": "box-fill",
+            "description": "<p>String box-fill type: capture-children or maintain-children</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "HTMLAttribute",
+            "optional": false,
+            "field": "box-child",
+            "description": "<p>The the box fill that this element is children of box-fill.</p> "
+          }
+        ]
+      }
+    },
+    "examples": [
+      {
+        "title": "HTML",
+        "content": "<ul box-fill=\"capture-children\">\n    <li box-child style=\"height: 20px\"></li>\n    <li box-child style=\"height: 30px\"></li>\n    <li box-child style=\"height: 40px\"></li>\n    <li box-child style=\"height: 50px\"></li>\n</ul>",
+        "type": "html"
+      }
+    ],
+    "filename": "tags/v1.0.0.js",
+    "groupTitle": "Extensions"
+  },
+  {
     "version": "1.0.0",
     "group": "jQNotice",
     "type": "notification",
