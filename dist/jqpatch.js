@@ -1946,6 +1946,7 @@ if (window.__nconfig = {}, function () {
 
         this.current = 0;
         this.init = true;
+        this.ready = true;
 
         /* Getting Options */
         this.holder = $object;
@@ -1987,6 +1988,8 @@ if (window.__nconfig = {}, function () {
         /* Getting Switch Next Button */
         this.nextBtn = $('[switch-next' + vqr + ']', this.holder)
             .click(function (e) {
+                if (!$this.ready) return;
+
                 e.preventDefault();
 
                 $this.next();
@@ -1995,6 +1998,8 @@ if (window.__nconfig = {}, function () {
         /* Getting Switch Prev Button */
         this.prevBtn = $('[switch-prev' + vqr + ']', this.holder)
             .click(function (e) {
+                if (!$this.ready) return;
+
                 e.preventDefault();
 
                 $this.prev();
@@ -2003,6 +2008,8 @@ if (window.__nconfig = {}, function () {
         /* Getting Switch Select */
         this.selectBtns = $('[switch-select' + vqr + ']', this.holder)
             .click(function (e) {
+                if (!$this.ready) return;
+
                 e.preventDefault();
 
                 var idx = $this.selectBtns.indexOf(this);
@@ -2015,6 +2022,8 @@ if (window.__nconfig = {}, function () {
 
             this.selectBtns
                 .mouseenter(function (e) {
+                    if (!$this.ready) return;
+
                     e.preventDefault();
 
                     var self = this;
@@ -2125,18 +2134,12 @@ if (window.__nconfig = {}, function () {
         },
 
         animate: function (single) {
-            if (!this.init && this.options.auto) {
-                this.start();
-            }
+            this.ready = false;
 
             if (SWEffects.hasOwnProperty(this.options.effect)) {
                 SWEffects[this.options.effect].call(this, single);
             } else {
                 SWEffects['default'].call(this);
-            }
-
-            if (this.options.callback && isFunction(this.options.callback)) {
-                this.options.callback.call(this);
             }
 
             return this;
@@ -2166,6 +2169,20 @@ if (window.__nconfig = {}, function () {
 
             return this;
         },
+
+        done: function () {
+            this.ready = true;
+
+            if (!this.init && this.options.auto) {
+                this.start();
+            }
+
+            if (this.options.callback && isFunction(this.options.callback)) {
+                this.options.callback.call(this);
+            }
+
+            return this;
+        }
     };
 
     /* Effect maker */
@@ -2196,6 +2213,8 @@ if (window.__nconfig = {}, function () {
                 $this.init = false;
                 $this.target.css('opacity', 1).addClass('active').attr('switch-item', 'active');
                 $this.selectBtns.nth($this.current).addClass('active').attr('switch-select', 'active');
+
+                $this.done();
             } else {
                 /* Deactivate Active Item */
                 if ($this.active) {
@@ -2206,6 +2225,8 @@ if (window.__nconfig = {}, function () {
                         ease: $this.options.ease
                     }, function () {
                         $(this).attr('switch-item', '').addClass('inactive');
+
+                        $this.done();
                     });
                 }
 
@@ -2220,6 +2241,8 @@ if (window.__nconfig = {}, function () {
                             ease: $this.options.ease
                         }, function () {
                             $(this).attr('switch-item', 'active').addClass('active');
+
+                            $this.done();
                         });
                     }
                 }
