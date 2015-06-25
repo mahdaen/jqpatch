@@ -50,21 +50,21 @@
     };
     $plg.nextSwitch = function () {
         return this.each(function () {
-            if ( this.hasOwnProperty('slider') ) {
+            if ( this.hasOwnProperty('switcher') ) {
                 this.switcher.next();
             }
         });
     };
     $plg.prevSwitch = function () {
         return this.each(function () {
-            if ( this.hasOwnProperty('slider') ) {
+            if ( this.hasOwnProperty('switcher') ) {
                 this.switcher.prev();
             }
         });
     };
     $plg.goSwitch = function (idx) {
         return this.each(function () {
-            if ( this.hasOwnProperty('slider') ) {
+            if ( this.hasOwnProperty('switcher') ) {
                 this.switcher.select(idx);
             }
         });
@@ -125,13 +125,22 @@
         }
 
         if ( this.options.hoverPause ) {
-            $(this.holder).hover(function (e) {
-                if ( e.status === 'enter' ) {
-                    $('.progress', this).pause();
-                }
-                else if ( e.status === 'leave' ) {
-                    $('.progress', this).resume();
-                }
+            $holder.mouseenter(function (e) {
+                e.stopPropagation();
+                e.preventDefault();
+
+                $this.progress.pause();
+                $this.holdover = true;
+
+                return false;
+            }).mouseleave(function (e) {
+                e.stopPropagation();
+                e.preventDefault();
+
+                $this.progress.resume();
+                $this.holdover = false;
+
+                return false;
             });
         }
 
@@ -150,32 +159,41 @@
         /* Getting Switch Next Button */
         this.nextBtn = $('[switch-next' + vqr + ']', this.holder)
             .click(function (e) {
-                if (!$this.ready) return;
+                if ( !$this.ready ) return;
 
                 e.preventDefault();
+                e.stopPropagation();
 
                 $this.next();
+
+                return false;
             });
 
         /* Getting Switch Prev Button */
         this.prevBtn = $('[switch-prev' + vqr + ']', this.holder)
             .click(function (e) {
-                if (!$this.ready) return;
+                if ( !$this.ready ) return;
 
                 e.preventDefault();
+                e.stopPropagation();
 
                 $this.prev();
+
+                return false;
             });
 
         /* Getting Switch Select */
         this.selectBtns = $('[switch-select' + vqr + ']', this.holder)
             .click(function (e) {
-                if (!$this.ready) return;
+                if ( !$this.ready ) return;
 
                 e.preventDefault();
+                e.stopPropagation();
 
                 var idx = $this.selectBtns.indexOf(this);
                 $this.select(idx);
+
+                return false;
             });
 
         /* If hover is enabled */
@@ -184,9 +202,10 @@
 
             this.selectBtns
                 .mouseenter(function (e) {
-                    if (!$this.ready) return;
+                    if ( !$this.ready ) return;
 
                     e.preventDefault();
+                    e.stopPropagation();
 
                     var self = this;
 
@@ -195,6 +214,8 @@
                     hvTime = setTimeout(function () {
                         self.click();
                     }, 200);
+
+                    return false;
                 })
                 .mouseleave(function (e) {
                     clearTimeout(hvTime);
@@ -205,8 +226,11 @@
         this.closer = $('[switch-hide' + vqr + ']', this.holder)
             .click(function (e) {
                 e.preventDefault();
+                e.stopPropagation();
 
                 $this.hide();
+
+                return false;
             });
 
         /* Getting Switch Progress */
@@ -239,9 +263,7 @@
 
         /* Auto Rotate Switch */
         if ( this.options.auto ) {
-            $.loaded(function () {
-                $this.start();
-            });
+            $this.start();
         }
 
         return this;
@@ -261,6 +283,7 @@
             var $this = this;
 
             $this.active = $this.items.filter('[switch-item="active"]');
+            $this.progress.addClass('reset').width('0%');
 
             if ( isNumber(index) ) {
                 $this.target = $this.items.nth(index);
@@ -317,9 +340,11 @@
         start : function () {
             var $this = this;
 
-            $this.progress.ganimate({ width : '100%' }, this.options.auto, function () {
-                $this.next();
-            });
+            if (!this.holdover) {
+                $this.progress.removeClass('reset').ganimate({width : '100%' }, this.options.auto, function () {
+                    $this.next();
+                });
+            }
 
             return this;
         },

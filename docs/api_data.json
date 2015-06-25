@@ -468,6 +468,51 @@
   {
     "version": "1.1.0",
     "group": "Extensions",
+    "type": "background-img",
+    "url": "background-img",
+    "title": "background-img",
+    "name": "BackgroundImage",
+    "description": "<p>Set background image of elements using attribute.</p> ",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "HTMLAttribute",
+            "optional": false,
+            "field": "background-img",
+            "description": "<p>String background iamge url.</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "HTMLAttribute",
+            "optional": false,
+            "field": "x",
+            "description": "<p>Backround image left position.</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "HTMLAttribute",
+            "optional": false,
+            "field": "y",
+            "description": "<p>Background image top position.</p> "
+          }
+        ]
+      }
+    },
+    "examples": [
+      {
+        "title": "HTML",
+        "content": "<div class=\"thumbnail\" background-img=\"../images/bg1.jpg\" x=\"center\" y=\"center\"></div>",
+        "type": "html"
+      }
+    ],
+    "filename": "tags/v1.0.0.js",
+    "groupTitle": "Extensions"
+  },
+  {
+    "version": "1.1.0",
+    "group": "Extensions",
     "type": "box-fill",
     "url": "box-fill",
     "title": "box-fill",
@@ -498,6 +543,54 @@
         "title": "HTML",
         "content": "<ul box-fill=\"capture-children\">\n    <li box-child style=\"height: 20px\"></li>\n    <li box-child style=\"height: 30px\"></li>\n    <li box-child style=\"height: 40px\"></li>\n    <li box-child style=\"height: 50px\"></li>\n</ul>",
         "type": "html"
+      }
+    ],
+    "filename": "tags/v1.0.0.js",
+    "groupTitle": "Extensions"
+  },
+  {
+    "version": "1.1.0",
+    "group": "Extensions",
+    "type": "icon",
+    "url": "data-icon",
+    "title": "data-icon",
+    "name": "DataIcon",
+    "description": "<p>Set font-icon for :after/:before elements without adding too many class in css. We only need to register the character to dataicon collections.</p> ",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "HTMLAttribute",
+            "optional": false,
+            "field": "icon-a",
+            "description": "<p>Set icon to :after element.</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "HTMLAttribute",
+            "optional": false,
+            "field": "icon-b",
+            "description": "<p>Set icon to :before element.</p> "
+          }
+        ]
+      }
+    },
+    "examples": [
+      {
+        "title": "HTML",
+        "content": "<span class=\"icon\" icon-b=\"setting\"></span>\n<span class=\"icon\" icon-a=\"pencil\"></span>",
+        "type": "html"
+      },
+      {
+        "title": "CSS",
+        "content": ".icon {\n    // Set font family and icon styles.\n}\n\n[icon-b].ready:before {\n    content: attr(icon-b);\n}\n[icon-a].ready:after {\n    content: attr(icon-a);\n}",
+        "type": "css"
+      },
+      {
+        "title": "Javascript",
+        "content": "$(document).ready(function() {\n    // Register icon character and name to data icon collections.\n    DataIcons.push({ setting: 'a', pencil: 'b', warning: '@' });\n});",
+        "type": "javascript"
       }
     ],
     "filename": "tags/v1.0.0.js",

@@ -752,4 +752,58 @@
  * </ul>
  */
 
+/**
+ * @apiVersion 1.1.0
+ * @apiGroup Extensions
+ *
+ * @api {background-img} background-img background-img
+ * @apiName BackgroundImage
+ * @apiDescription Set background image of elements using attribute.
+ *
+ * @apiParam {HTMLAttribute} background-img String background iamge url.
+ * @apiParam {HTMLAttribute} x Backround image left position.
+ * @apiParam {HTMLAttribute} y Background image top position.
+ *
+ * @apiExample {html} HTML
+ * <div class="thumbnail" background-img="../images/bg1.jpg" x="center" y="center"></div>
+ *
+ */
+
+/**
+ * @apiVersion 1.1.0
+ * @apiGroup Extensions
+ *
+ * @api {icon} data-icon data-icon
+ * @apiName DataIcon
+ * @apiDescription Set font-icon for :after/:before elements without adding too many class in css. We only need to register the character to dataicon collections.
+ *
+ * @apiParam {HTMLAttribute} icon-a Set icon to :after element.
+ * @apiParam {HTMLAttribute} icon-b Set icon to :before element.
+ *
+ * @apiExample {html} HTML
+ * <span class="icon" icon-b="setting"></span>
+ * <span class="icon" icon-a="pencil"></span>
+ *
+ * @apiExample {css} CSS
+ * .icon {
+ *     // Set font family and icon styles.
+ * }
+ *
+ * [icon-b].ready:before {
+ *     content: attr(icon-b);
+ * }
+ * [icon-a].ready:after {
+ *     content: attr(icon-a);
+ * }
+ *
+ * @apiExample {javascript} Javascript
+ * $(document).ready(function() {
+ *     // Register icon character and name to data icon collections.
+ *     DataIcons.push({ setting: 'a', pencil: 'b', warning: '@' });
+ * });
+ *
+ */
+
+
+
 //

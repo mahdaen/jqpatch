@@ -23,11 +23,11 @@
             }
         });
 
-        $('[icon]', context).each(function() {
-            var iconb = $(this).attr('icon');
+        $('[icon-b]', context).each(function() {
+            var iconb = $(this).attr('icon-b');
 
             if (iconb && window.DataIcons[iconb]) {
-                $(this).attr('icon', window.DataIcons[iconb]).addClass('ready');
+                $(this).attr('icon-b', window.DataIcons[iconb]).addClass('ready');
             }
         });
     };
