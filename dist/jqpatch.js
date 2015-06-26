@@ -1354,6 +1354,14 @@ if (window.__nconfig = {}, function () {
                 $(this).attr('icon-b', window.DataIcons[iconb]).addClass('ready');
             }
         });
+
+        $('[icon]', context).each(function () {
+            var iconb = $(this).attr('icon');
+
+            if (iconb && window.DataIcons[iconb]) {
+                $(this).attr('icon', window.DataIcons[iconb]).addClass('ready');
+            }
+        });
     };
     /* Data Icon List */
     var DataIcons = function () {
